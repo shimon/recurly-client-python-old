@@ -276,10 +276,25 @@ class Recurly(object):
                 if di[child.tagName] is None:
                     di[child.tagName] = Recurly._parse_xml_doc(child)
                 elif type(di[child.tagName]) is types.ListType:
-					grandchild = child.firstChild
-					while grandchild is not None:
-						di[child.tagName].append(Recurly._parse_xml_doc(grandchild))
-						grandchild = grandchild.nextSibling
+                    if child.tagName == "account":
+                        accountAttrs = dict()
+                        grandchild = child.firstChild
+                        while grandchild is not None:
+                            if grandchild.tagName in accountAttrs:
+                                raise ValueError(("Duplicate tag found under "
+                                                  "%s: %s. \nXML: %s") % (
+                                                     child.tagName,
+                                                     grandchild.tagName,
+                                                     child.toxml()))
+                            accountAttrs[grandchild.tagName] = Recurly._parse_xml_doc(grandchild)
+                            grandchild = grandchild.nextSibling
+                        di[child.tagName].append(accountAttrs)
+
+                    else:
+                        grandchild = child.firstChild
+                        while grandchild is not None:
+                            di[child.tagName].append(Recurly._parse_xml_doc(grandchild))
+                            grandchild = grandchild.nextSibling
                 
             child = child.nextSibling
         return di
