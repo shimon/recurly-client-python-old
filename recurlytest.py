@@ -7,13 +7,16 @@ __license__ = 'MIT License'
 __version__ = '1.2-devel'
 
 
+import datetime
 import sys
 import unittest
 import types
 import random
 
-from recurly import Recurly, RecurlyException, RecurlyConnectionException, RecurlyValidationException
-
+from recurly import (Recurly,
+                     RecurlyException,
+                     RecurlyConnectionException,
+                     RecurlyValidationException)
 
 # Use your Recurly credentials here.
 USERNAME = ''
@@ -26,6 +29,11 @@ PLAN_CODE_B = 'trial'
 
 # Make or find a user with an invoice and put her account code here.
 ACCOUNT_WITH_INVOICE = ''
+
+try:
+    from recurlytest_local import *
+except ImportError:
+    pass
 
 '''
 
